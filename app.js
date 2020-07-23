@@ -6,6 +6,10 @@ const movieSelect = document.getElementById("movie");
 
 let ticketPrice = parseInt(movieSelect.value);
 
+
+populateUI();
+updateTotal();
+
 // Save selected movie index and price
 function setMovieData(index, price) {
     localStorage.setItem("selectedMovieIndex", index);
@@ -15,9 +19,6 @@ function setMovieData(index, price) {
 // Update Number of Selected Seats
 function updateTotal() {
     const selectedSeats = document.querySelectorAll(".row .seat.selected");
-    // TODO: Copy Seats Into an array
-    // TODO: Map through the array
-    // TODO: Return new array of indexes
 
     const seatsIndexes = [...selectedSeats].map((seat) => [...seats].indexOf(seat));
 
@@ -28,6 +29,30 @@ function updateTotal() {
     total.innerText = seatsSelected * ticketPrice
 }
 
+function populateUI() {
+    // Fetch data from localStorage
+    const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
+
+    if (selectedSeats !== null && 
+        selectedSeats.length > 0) {
+            seats.forEach((seat, index) => {
+                if (selectedSeats.indexOf(index) > -1) {
+                    seat.classList.add("selected")
+                }
+            });
+    }
+    
+    const selectedMovieIndex = localStorage.getItem("selectedMovieIndex");
+
+    if (selectedMovieIndex !== null){
+        movieSelect.selectedIndex = selectedMovieIndex;
+        ticketPrice = parseInt(movieSelect.value);
+    }
+
+}
+
+
+// EVENT LISTENERS
 
 // Seat Clicked
 container.addEventListener("click", (e) => {
@@ -44,3 +69,5 @@ movieSelect.addEventListener("change", (e) => {
     setMovieData(e.target.selectedIndex, e.target.value);
     updateTotal();
 });
+
+// Initial Total 
